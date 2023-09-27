@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">GeoQuiz</string>
+
+    <string name="true_button">True</string>
+    <string name="false_button">False</string>
+    <string name="prev_button">Prev</string>
+    <string name="next_button">Next</string>
+
+    <string name="correct_toast">Correct</string>
+    <string name="incorrect_toast">Incorrect</string>
+
+    <string name="warning_text">Are you sure you want to do this?</string>
+    <string name="show_answer_button">Show Answer</string>
+    <string name="cheat_button">Cheat!</string>
+    <string name="judgment_toast">Cheating is wrong.</string>
+
+    <string name="question_longest_mountain">Is Mount Everest the tallest mountain in the world?</string>
+    <string name="question_capital_brazil">Is Brasilia the capital of Brazil?</string>
+    <string name="question_smallest_ocean">Does Pacific Ocean have the smallest by surface area?</string>
+    <string name="question_longest_european_river">Is the Volga River the longest river in Europe?</string>
+    <string name="question_land_rising_sun">Is Japan known as the "Land of the Rising Moon"?</string>
+    <string name="move_left">move_left</string>
+    <string name="move_right">move_right</string>
+    <string name="deny">Deny</string>
+    <string name="confirm">Confirm</string>
+    <string name="restart_game">Restart Game?</string>
+
+</resources>

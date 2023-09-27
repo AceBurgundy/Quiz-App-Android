@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.example.quizapp.CheatActivity">
+
+    <TextView
+        style="@style/CustomTextStyle"
+        android:text="@string/warning_text"/>
+
+    <TextView
+        android:id="@+id/answer_text_view"
+        style="@style/CustomTextStyle"
+        tools:text="Answer"/>
+
+    <Button
+        android:id="@+id/show_answer_button"
+        style="@style/CustomButtonStyle"
+        android:text="@string/show_answer_button"/>
+
+</LinearLayout>

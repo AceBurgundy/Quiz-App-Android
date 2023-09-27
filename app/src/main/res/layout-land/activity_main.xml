@@ -1,0 +1,93 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/question_text_view"
+        style="@style/CustomTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/game"
+        android:layout_marginTop="70dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+            android:id="@+id/answer_buttons_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/true_button"
+                style="@style/CustomButtonStyle"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button_background"
+                android:fontFamily="@font/game"
+                android:padding="16dp"
+                android:text="@string/true_button"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/false_button"
+                style="@style/CustomButtonStyle"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button_background"
+                android:fontFamily="@font/game"
+                android:padding="16dp"
+                android:text="@string/false_button"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:id="@+id/cheat_button"
+            android:layout_gravity="bottom|left"
+            style="@style/CustomButtonStyle"
+            android:layout_margin="16dp"
+            android:text="@string/cheat_button" />
+
+        <LinearLayout
+                android:id="@+id/navigation_buttons_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="16dp">
+
+                <ImageButton
+                    android:id="@+id/previous_button"
+                    style="@style/CustomImageStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/rounded_image_button_background"
+                    android:contentDescription="@string/move_left"
+                    android:src="@drawable/arrow_left" />
+
+                <ImageButton
+                    android:id="@+id/next_button"
+                    style="@style/CustomImageStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/rounded_image_button_background"
+                    android:contentDescription="@string/move_right"
+                    android:src="@drawable/arrow_right" />
+
+
+        </LinearLayout>
+
+</FrameLayout>
