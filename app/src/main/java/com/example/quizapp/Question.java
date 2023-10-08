@@ -3,15 +3,15 @@ package com.example.quizapp;
 public class Question {
 
     private int mTextResId;
-    private boolean mAnswerTrue;
+    private boolean correctAnswer;
 
-    private boolean mSkipped;
+    private boolean skipped;
     private boolean answered;
 
-    public Question(int textResId, boolean answerTrue) {
+    public Question(int textResId, boolean answer) {
         mTextResId = textResId;
-        mAnswerTrue = answerTrue;
-        mSkipped = false;
+        correctAnswer = answer;
+        skipped = false;
         answered = false;
     }
 
@@ -19,36 +19,28 @@ public class Question {
         return mTextResId;
     }
 
-    public void setTextResId(int textResId) {
-        mTextResId = textResId;
-    }
-
     public boolean isAnswerTrue() {
-        return mAnswerTrue;
+        return correctAnswer;
     }
 
-    public void setAnswerTrue(boolean answerTrue) {
-        mAnswerTrue = answerTrue;
+    public boolean isSkipped() {
+        return skipped;
     }
 
-    public boolean ismSkipped() {
-        return mSkipped;
-    }
-
-    public void setmSkipped() {
-        this.mSkipped = true;
+    public void markedAsSkipped() {
+        this.skipped = true;
     }
 
     public boolean isAnswered() {
         return answered;
     }
 
-    public void setAnswered() {
+    public void markedAsAnswered() {
         answered = true;
     }
 
     public void reset() {
-        mSkipped = false;
+        skipped = false;
         answered = false;
     }
 
