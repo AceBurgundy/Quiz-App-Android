@@ -10,103 +10,104 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
-    private static final String QUESTION_INDEX = "index";
+    private static final String CHEATED_COUNT = "cheated_count";
+    private static final String DIALOG_OPEN = "dialog_open";
     private static final String HAS_CHEATED = "hasCheated";
-    private boolean dialogIsOpen = false;
-    private TextView mQuestionTextView;
+    private static final String QUESTION_INDEX = "index";
+    private static final String CURRENT_SCORE = "score";
 
-    private static final Question[] mQuestionBank = new Question[] {
-            new Question(R.string.question_longest_mountain, true),
-            new Question(R.string.question_capital_brazil, true),
-            new Question(R.string.question_smallest_ocean, false),
+    private boolean dialogIsOpen = false;
+    private TextView questionTextView;
+
+    private static final Question[] questionBank = new Question[] {
             new Question(R.string.question_longest_european_river, true),
+            new Question(R.string.question_longest_mountain, true),
             new Question(R.string.question_land_rising_sun, false),
+            new Question(R.string.question_smallest_ocean, false),
+            new Question(R.string.question_capital_brazil, true),
     };
 
-        private static final int QUESTION_COUNT = mQuestionBank.length;
-    private int score = 0;
-    private int mCurrentIndex = 0;
-
+    private static final int QUESTION_COUNT = questionBank.length;
+    private int currentQuestionIndex = 0;
+    private boolean playerIsCheater;
     private int cheatedCount = 0;
-    private boolean mIsCheater;
+    private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Button mTrueButton;
-        Button mFalseButton;
-        Button mCheatButton;
-        ImageButton mNextButton;
-        ImageButton mPreviousButton;
+        Button trueButton;
+        Button falseButton;
+        Button cheatButton;
+        ImageButton nextButton;
+        ImageButton previousButton;
 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState != null) {
-            mIsCheater = savedInstanceState.getBoolean(HAS_CHEATED, false);
-            mCurrentIndex = savedInstanceState.getInt(QUESTION_INDEX, 0);
+            playerIsCheater = savedInstanceState.getBoolean(HAS_CHEATED, false);
+            currentQuestionIndex = savedInstanceState.getInt(QUESTION_INDEX, 0);
+            dialogIsOpen = savedInstanceState.getBoolean(DIALOG_OPEN, false);
+            cheatedCount = savedInstanceState.getInt(CHEATED_COUNT, 0);
+            score = savedInstanceState.getInt(CURRENT_SCORE, 0);
         }
 
-        Log.d(TAG, String.format("OnCreate Cheater: %s", mIsCheater));
+        questionTextView = findViewById(R.id.question_text_view);
 
-        mQuestionTextView = findViewById(R.id.question_text_view);
+        int question = questionBank[currentQuestionIndex].getTextResId();
+        questionTextView.setText(question);
 
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
-        mQuestionTextView.setText(question);
-
-        mQuestionTextView.setOnClickListener(view -> {
-            mQuestionBank[mCurrentIndex].setmSkipped();
+        questionTextView.setOnClickListener(view -> {
+            questionBank[currentQuestionIndex].markedAsSkipped();
             nextQuestion();
         });
 
-        mTrueButton = findViewById(R.id.true_button);
-        mTrueButton.setOnClickListener(view -> {
+        trueButton = findViewById(R.id.true_button);
+        trueButton.setOnClickListener(view -> {
 
             if (questionAlreadyAnswered()) return;
 
-            mQuestionBank[mCurrentIndex].setAnswered();
+            questionBank[currentQuestionIndex].markedAsAnswered();
             checkAnswer(true);
             nextQuestion();
         });
 
-        mFalseButton = findViewById(R.id.false_button);
-        mFalseButton.setOnClickListener(view -> {
+        falseButton = findViewById(R.id.false_button);
+        falseButton.setOnClickListener(view -> {
 
             if (questionAlreadyAnswered()) return;
 
-            mQuestionBank[mCurrentIndex].setAnswered();
+            questionBank[currentQuestionIndex].markedAsAnswered();
             checkAnswer(false);
             nextQuestion();
         });
 
-        mNextButton = findViewById(R.id.next_button);
-        mNextButton.setOnClickListener(view -> {
-            mQuestionBank[mCurrentIndex].setmSkipped();
+        nextButton = findViewById(R.id.next_button);
+        nextButton.setOnClickListener(view -> {
+            questionBank[currentQuestionIndex].markedAsSkipped();
             nextQuestion();
         });
 
-        mCheatButton = findViewById(R.id.cheat_button);
-        mCheatButton.setOnClickListener(view -> {
-            boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+        cheatButton = findViewById(R.id.cheat_button);
+        cheatButton.setOnClickListener(view -> {
+            boolean answerIsTrue = questionBank[currentQuestionIndex].isAnswerTrue();
             Intent intent = CheatActivity.newIntent(MainActivity.this, answerIsTrue);
             cheatActivityResultLauncher.launch(intent);
         });
 
-        mPreviousButton = findViewById(R.id.previous_button);
-        mPreviousButton.setOnClickListener(view -> {
-            mCurrentIndex = (mCurrentIndex - 1 + mQuestionBank.length) % mQuestionBank.length;
-            int question1 = mQuestionBank[mCurrentIndex].getTextResId();
-            mQuestionTextView.setText(question1);
+        previousButton = findViewById(R.id.previous_button);
+        previousButton.setOnClickListener(view -> {
+            currentQuestionIndex = (currentQuestionIndex - 1 + questionBank.length) % questionBank.length;
+            int question1 = questionBank[currentQuestionIndex].getTextResId();
+            questionTextView.setText(question1);
             updateQuestion();
         });
 
@@ -120,14 +121,14 @@ public class MainActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     if (data != null) {
-                        mIsCheater = CheatActivity.wasAnswerShown(data);
+                        playerIsCheater = CheatActivity.wasAnswerShown(data);
                     }
                 }
             }
     );
 
     private boolean questionAlreadyAnswered() {
-        boolean alreadyAnswered = mQuestionBank[mCurrentIndex].isAnswered();
+        boolean alreadyAnswered = questionBank[currentQuestionIndex].isAnswered();
         if (alreadyAnswered) {
             Toast.makeText(this, "Question already visited", Toast.LENGTH_SHORT).show();
         }
@@ -137,53 +138,56 @@ public class MainActivity extends AppCompatActivity {
     private void nextQuestion() {
         checkIfWon();
         if (dialogIsOpen) return;
-        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-        int question1 = mQuestionBank[mCurrentIndex].getTextResId();
-        mQuestionTextView.setText(question1);
-        mIsCheater = false;
+        currentQuestionIndex = (currentQuestionIndex + 1) % questionBank.length;
+        int question1 = questionBank[currentQuestionIndex].getTextResId();
+        questionTextView.setText(question1);
+        playerIsCheater = false;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt(QUESTION_INDEX, mCurrentIndex);
-        savedInstanceState.putBoolean(HAS_CHEATED, mIsCheater);
+        savedInstanceState.putInt(QUESTION_INDEX, currentQuestionIndex);
+        savedInstanceState.putBoolean(DIALOG_OPEN, dialogIsOpen);
+        savedInstanceState.putBoolean(HAS_CHEATED, playerIsCheater);
+        savedInstanceState.putInt(CHEATED_COUNT, cheatedCount);
+        savedInstanceState.putInt(CURRENT_SCORE, score);
     }
 
     private void updateQuestion() {
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
-        mQuestionTextView.setText(question);
+        int question = questionBank[currentQuestionIndex].getTextResId();
+        questionTextView.setText(question);
     }
 
     private int countSkipped() {
         int skipped = 0;
-        for (Question question : mQuestionBank) {
-            if (question.ismSkipped()) skipped++;
+        for (Question question : questionBank) {
+            if (question.isSkipped()) skipped++;
         }
         return skipped;
     }
 
     private int countVisited() {
         int skipped = 0;
-        for (Question question : mQuestionBank) {
-            if (question.ismSkipped() || question.isAnswered()) skipped++;
+        for (Question question : questionBank) {
+            if (question.isSkipped() || question.isAnswered()) skipped++;
         }
         return skipped;
     }
 
     private void resetQuestions() {
-        for (Question question : mQuestionBank) {
+        for (Question question : questionBank) {
             question.reset();
         }
         dialogIsOpen = false;
-        mIsCheater = false;
+        playerIsCheater = false;
         score = 0;
         nextQuestion();
     }
 
     private void checkAnswer(boolean userPressedTrue) {
-        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-        if (mIsCheater) {
+        boolean answerIsTrue = questionBank[currentQuestionIndex].isAnswerTrue();
+        if (playerIsCheater) {
             Toast.makeText(this, R.string.judgment_toast, Toast.LENGTH_SHORT).show();
             cheatedCount++;
             return;
@@ -194,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     private void checkIfWon() {
         if (countVisited() == QUESTION_COUNT) {
+            if (QUESTION_COUNT == 0) return;
             int correctPercentage = (score * 100) / QUESTION_COUNT;
             if (score < QUESTION_COUNT) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
